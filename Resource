@@ -1,0 +1,25 @@
+package com.skyscanner.hoen.resources;
+
+import com.skyscanner.hoen.services.SearchService;
+import com.skyscanner.hoen.models.SearchResult;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+
+@Path("/search")
+@Produces(MediaType.APPLICATION_JSON)
+public class SearchResource {
+
+    private final SearchService searchService;
+
+    public SearchResource(SearchService searchService) {
+        this.searchService = searchService;
+    }
+
+    @GET
+    public SearchResult search(@QueryParam("city") String city) {
+        if (city == null || city.trim().isEmpty()) {
+            throw new WebApplicationException("City query parameter is required", 400);
+        }
+        return searchService.search(city);
+    }
+}
