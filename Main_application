@@ -1,0 +1,23 @@
+package com.skyscanner.hoen;
+
+import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+
+public class HoenServiceApplication extends Application<HoenServiceConfiguration> {
+
+    public static void main(String[] args) throws Exception {
+        new HoenServiceApplication().run(args);
+    }
+
+    @Override
+    public void initialize(Bootstrap<HoenServiceConfiguration> bootstrap) {
+    }
+
+    @Override
+    public void run(HoenServiceConfiguration config, Environment environment) {
+        SearchService searchService = new SearchService(config.getHotelsFile(), config.getCarsFile());
+        SearchResource resource = new SearchResource(searchService);
+        environment.jersey().register(resource);
+    }
+}
