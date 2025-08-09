@@ -1,0 +1,66 @@
+package com.skyscanner.hoen.services;
+
+import com.skyscanner.hoen.models.*;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class SearchService {
+    private List<Hotel> hotels;
+    private List<RentalCar> cars;
+
+    public SearchService(String hotelsFile, String carsFile) {
+        this.hotels = loadHotels(hotelsFile);
+        this.cars = loadCars(carsFile);
+    }
+
+    private List<Hotel> loadHotels(String file) {
+        try {
+            return Files.lines(Paths.get(file))
+                    .skip(1)
+                    .map(line -> line.split(","))
+                    .map(parts -> {
+                        Hotel h = new Hotel();
+                        h.name = parts[0];
+                        h.address = parts[1];
+                        h.city = parts[2];
+                        return h;
+                    }).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    private List<RentalCar> loadCars(String file) {
+        try {
+            return Files.lines(Paths.get(file))
+                    .skip(1)
+                    .map(line -> line.split(","))
+                    .map(parts -> {
+                        RentalCar c = new RentalCar();
+                        c.company = parts[0];
+                        c.car = parts[1];
+                        c.city = parts[2];
+                        return c;
+                    }).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public SearchResult search(String city) {
+        String query = city.toLowerCase();
+        List<Hotel> matchedHotels = hotels.stream()
+                .filter(h -> h.city.equalsIgnoreCase(query))
+                .collect(Collectors.toList());
+
+        List<RentalCar> matchedCars = cars.stream()
+                .filter(c -> c.city.equalsIgnoreCase(query))
+                .collect(Collectors.toList());
+
+        return new SearchResult(matchedHotels, matchedCars);
+    }
+}
