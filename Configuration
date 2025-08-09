@@ -1,0 +1,30 @@
+package com.skyscanner.hoen;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.Configuration;
+
+public class HoenServiceConfiguration extends Configuration {
+
+    private String hotelsFile;
+    private String carsFile;
+
+    @JsonProperty
+    public String getHotelsFile() {
+        return hotelsFile;
+    }
+
+    @JsonProperty
+    public void setHotelsFile(String hotelsFile) {
+        this.hotelsFile = hotelsFile;
+    }
+
+    @JsonProperty
+    public String getCarsFile() {
+        return carsFile;
+    }
+
+    @JsonProperty
+    public void setCarsFile(String carsFile) {
+        this.carsFile = carsFile;
+    }
+}
